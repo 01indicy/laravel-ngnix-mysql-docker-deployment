@@ -10,10 +10,10 @@ class UserController extends Controller {
         return response()->json(["msg" => "return all users"]);
     }
 
-    public function create(Request $request): JsonResponse {
+    public function store(Request $request): JsonResponse {
         $this->validate($request, [
             "username" => "required",
-            "email" => "required",
+            "email" => "required|email",
             "password" => "required"
         ]);
 
@@ -21,7 +21,7 @@ class UserController extends Controller {
     }
 
     public function show($id): JsonResponse {
-        return response()->json(["msg" => "show user"]);
+        return response()->json(["msg" => "show user by id"]);
     }
 
     public function update(Request $request, $id): JsonResponse {
