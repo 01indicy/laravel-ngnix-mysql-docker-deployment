@@ -21,4 +21,8 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 EXPOSE 9000
-CMD ["php-fpm"]
+
+RUN mkdir -p /var/www/html/storage/logs
+RUN chown -R 777 /var/www/html/storage/logs
+
+CMD php artisan migrate && php-fpm
