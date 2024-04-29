@@ -34,7 +34,10 @@ class UserController extends Controller {
     }
 
     public function show($id): JsonResponse {
-        return response()->json(["msg" => "show user by id"]);
+        $data = UserModel::find($id);
+        if (!$data) return response()->json(["error" => "User not found"], 404);
+
+        return response()->json($data);
     }
 
     public function update(Request $request, $id): JsonResponse {
