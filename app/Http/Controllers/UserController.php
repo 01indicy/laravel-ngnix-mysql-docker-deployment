@@ -41,16 +41,18 @@ class UserController extends Controller {
     }
 
     public function update(Request $request, $id): JsonResponse {
-        $this->validate($request, [
-            "username" => "required",
-            "email" => "required",
-            "password" => "required"
-        ]);
+        $data = UserModel::find($id);
+        if (!$data) return response()->json(["error" => "User not found"], 404);
 
+        $data->update($request->all());
         return response()->json(["msg" => "update user success"]);
     }
 
     public function delete($id): JsonResponse {
-        return response()->json(["msg" => "delete user"]);
+        $data = UserModel::find($id);
+        if (!$data) return response()->json(["error" => "User not found"], 404);
+
+        $data->delete();
+        return response()->json(["message" => "User deleted successfully"]);
     }
 }
