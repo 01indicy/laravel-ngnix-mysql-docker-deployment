@@ -26,7 +26,7 @@ class UserController extends Controller {
         $user->user_email = $request->input("user_email");
         $user->phone_number = $request->input("phone_number");
         $user->gender = $request->input("gender");
-        $user->user_password = $request->input("user_password");
+        $user->user_password = app('hash')->make($request->input("user_password"));
         $user->save();
         $data = $user->refresh();
 
@@ -45,7 +45,7 @@ class UserController extends Controller {
         if (!$data) return response()->json(["error" => "User not found"], 404);
 
         $data->update($request->all());
-        return response()->json(["msg" => "update user success"]);
+        return response()->json(["msg" => "update user success", "data" => $data]);
     }
 
     public function delete($id): JsonResponse {

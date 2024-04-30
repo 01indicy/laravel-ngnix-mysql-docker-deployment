@@ -27,4 +27,9 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->put('/{id}', 'UserController@update');
         $router->delete('/{id}', 'UserController@destroy');
     });
+
+    $router->group(['prefix' => 'auth'], function () use ($router) {
+        $router->post('/login', 'AuthController@login');
+        $router->post('/logout', 'AuthController@logout');
+    });
 });
