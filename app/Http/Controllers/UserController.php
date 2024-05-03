@@ -19,6 +19,7 @@ class UserController extends Controller {
             "phone_number" => "required",
             "gender" => "required|in:male,female",
             "user_password" => "required",
+            "date_of_birth" => "required",
         ]);
 
         $user = new UserModel();
@@ -27,6 +28,7 @@ class UserController extends Controller {
         $user->phone_number = $request->input("phone_number");
         $user->gender = $request->input("gender");
         $user->user_password = app('hash')->make($request->input("user_password"));
+        $user->date_of_birth = $request->input("date_of_birth");
         $user->save();
         $data = $user->refresh();
 
