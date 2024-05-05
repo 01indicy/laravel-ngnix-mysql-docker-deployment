@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lumen-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lumen-api
+  template:
+    metadata:
+      labels:
+        app: lumen-api
+    spec:
+      containers:
+        - name: lumen-api
+          image: lumenciregistrykey/laravel-ci
+          ports:
+            - containerPort: 9000
+          env:
+            - name: MYSQL_HOST
+              value: mysql-service
+            - name: MYSQL_PORT
+              value: "3306"
+            - name: MYSQL_USER
+              value: lumen
+            - name: MYSQL_PASSWORD
+              value: secret
+            - name: MYSQL_DATABASE
+              value: lumen
+          resources:
+            limits:
+              cpu: "4"
+              memory: "512Mi"
+            requests:
+              cpu: "0.2"
+              memory: "25Mi"
+          livenessProbe:
+            httpGet:
+              port: 4000
+              path: /
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /1
+              port: 4000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      imagePullSecrets:
+        - name: lumenciregistrykey
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lumen-api-service
+spec:
+  selector:
+    app: lumen-api
+  ports:
+    - port: 6000
+      protocol: TCP
+      targetPort: 9000
+  type: LoadBalancer
